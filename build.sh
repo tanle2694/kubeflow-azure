@@ -22,7 +22,8 @@ echo "Setup kustomization"
 mkdir manifests/build
 cp kustomizations/kubeflow-azure-mysql-customization/kustomization.yaml manifests/build
 
-
+cp others/jupyter-web-app-disable-appsecure/deployment-patch.yaml manifests/apps/jupyter/jupyter-web-app/upstream/overlays/istio/
+echo "patchesStrategicMerge:\n- deployment-patch.yaml" >> manifests/apps/jupyter/jupyter-web-app/upstream/overlays/istio/kustomization.yaml
 while ! kustomize build manifests/build | kubectl apply -f -; do echo "Retrying to apply resources"; sleep 10; done
 
 kubectl patch svc istio-ingressgateway -p '{"spec": {"type": "LoadBalancer"}}' -n istio-system
