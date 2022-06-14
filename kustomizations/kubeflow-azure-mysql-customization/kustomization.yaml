@@ -27,6 +27,7 @@ resources:
 
 # Kubeflow Pipelines
 - ../apps/pipeline/upstream/env/azure-with-mysql
+# Removeto save resource
 # Katib
 # - ../apps/katib/upstream/installs/katib-with-kubeflow
 # Central Dashboard
@@ -39,6 +40,8 @@ resources:
 - ../apps/jupyter/notebook-controller/upstream/overlays/kubeflow
 # Profiles + KFAM
 - ../apps/profiles/upstream/overlays/kubeflow
+
+# Removeto save resource
 # Volumes Web App
 # - ../apps/volumes-web-app/upstream/overlays/istio
 # Tensorboards Controller
@@ -47,9 +50,24 @@ resources:
 # -  ../apps/tensorboard/tensorboards-web-app/upstream/overlays/istio
 # Training Operator
 # - ../apps/training-operator/upstream/overlays/kubeflow
+
 # User namespace
 - ../common/user-namespace/base
 
 # KServe
 - ../contrib/kserve/kserve
 - ../contrib/kserve/models-web-app/overlays/kubeflow
+
+
+patches:
+- patch: |-
+  - op: add
+    path: "/spec/template/spec/containers/0/env/-"
+    value:
+      name: APP_SECURE_COOKIES
+      value: "false"
+  target:
+    kind: Deployment
+    namespace: kubeflow
+    name: jupyter-web-app-deployment
+    
